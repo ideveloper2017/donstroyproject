@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CertificateController;
 use App\Http\Controllers\RolePermissionController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,20 @@ use Illuminate\Support\Facades\Route;
 
 // User authentication routes (public)
 Route::post('/login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'store']);
+
+// Certificate routes (public)
+Route::prefix('certificates')->group(function () {
+    Route::get('/', [CertificateController::class, 'index']);
+    Route::get('/verify/{certificateNumber}', [CertificateController::class, 'verify']);
+    
+    // Protected routes (require authentication)
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::post('/', [CertificateController::class, 'store']);
+        Route::get('/{certificate}', [CertificateController::class, 'show']);
+        Route::get('/{certificate}/download', [CertificateController::class, 'download']);
+        Route::delete('/{certificate}', [CertificateController::class, 'destroy']);
+    });
+});
 Route::post('/register', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'store']);
 
 // Protected routes
