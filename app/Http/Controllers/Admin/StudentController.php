@@ -22,17 +22,166 @@ use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Intervention\Image\Facades\Image;
 use Intervention\Image\ImageManager;
-
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\StudentsExport;
 
 class StudentController extends Controller
 {
     /**
+     * Export students to Excel
+     */
+    public function export(Request $request)
+    {
+        $query = Student::with('course');
+
+        if ($request->has('search')) {
+            $search = $request->search;
+            dd($search);
+//            if (!empty($search['name'])) {
+                $query->where('name', 'like', '%' . $search['name'] . '%');
+//            }
+
+//            if (!empty($filters['certificate_number'])) {
+//                $query->where('certificate_number', 'like', '%' . $filters['certificate_number'] . '%');
+//            }
+//
+//            if (!empty($filters['course_id'])) {
+//                $query->where('course_id', $filters['course_id']);
+//            }
+//
+//            if (!empty($filters['start_date'])) {
+//                $query->whereDate('certificate_date', '>=', $filters['start_date']);
+//            }
+//
+//            if (!empty($filters['end_date'])) {
+//                $query->whereDate('certificate_date', '<=', $filters['end_date']);
+//            }
+        }
+
+        // Apply the same filters as in the index method
+        if ($request->has('filter')) {
+            $filters = $request->filter;
+
+            if (!empty($filters['name'])) {
+                $query->where('name', 'like', '%' . $filters['name'] . '%');
+            }
+
+            if (!empty($filters['certificate_number'])) {
+                $query->where('certificate_number', 'like', '%' . $filters['certificate_number'] . '%');
+            }
+
+            if (!empty($filters['course_id'])) {
+                $query->where('course_id', $filters['course_id']);
+            }
+
+            if (!empty($filters['start_date'])) {
+                $query->whereDate('certificate_date', '>=', $filters['start_date']);
+            }
+
+            if (!empty($filters['end_date'])) {
+                $query->whereDate('certificate_date', '<=', $filters['end_date']);
+            }
+        }
+
+        $students = $query->latest()->get();
+
+        $headers = [
+            'ID',
+            'F.I.Sh',
+            'Sertifikat raqami',
+            'Sertifikat sanasi',
+            'Kurs nomi',
+            'Passport',
+            'Soat',
+            'Daraja',
+            'Nazoratchi',
+        ];
+
+        $data = [];
+        $data[] = $headers;
+
+        foreach ($students as $student) {
+            $data[] = [
+                $student->id,
+                $student->name,
+                $student->certificate_number,
+                $student->certificate_date,
+                $student->course ? $student->course->name : '',
+                $student->passport ?? '',
+                $student->hour ?? '',
+                $student->level ?? '',
+                $student->control ?? '',
+            ];
+        }
+
+        $fileName = 'students_' . date('Y-m-d_His') . '.xlsx';
+
+        // Create a temporary file
+        $tempFile = tempnam(sys_get_temp_dir(), 'students_export_');
+
+        // Create Excel file
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->fromArray($data, null, 'A1');
+
+        // Auto-size columns
+        foreach (range('A', 'I') as $columnID) {
+            $spreadsheet->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+        }
+
+        // Set headers for bold
+        $spreadsheet->getActiveSheet()->getStyle('A1:I1')->getFont()->setBold(true);
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer->save($tempFile);
+
+        // Return the file as a download
+        return response()->download($tempFile, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ])->deleteFileAfterSend(true);
+    }
+
+    /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::with('course')
-            ->latest()
+        $query = Student::with('course');
+
+
+        if ($request->has('search')) {
+            $search = $request->search;
+
+//            if (!empty($search['name'])) {
+               $query->where('name', 'like', '%' . $search . '%');
+//            }
+        }
+        // Apply filters if they exist in the request
+        if ($request->has('filter')) {
+            $filters = $request->filter;
+
+            if (!empty($filters['name'])) {
+                $query->where('name', 'like', '%' . $filters['name'] . '%');
+            }
+
+            if (!empty($filters['certificate_number'])) {
+                $query->where('certificate_number', 'like', '%' . $filters['certificate_number'] . '%');
+            }
+
+            if (!empty($filters['course_id'])) {
+                $query->where('course_id', $filters['course_id']);
+            }
+
+            if (!empty($filters['start_date'])) {
+                $query->whereDate('certificate_date', '>=', $filters['start_date']);
+            }
+
+            if (!empty($filters['end_date'])) {
+                $query->whereDate('certificate_date', '<=', $filters['end_date']);
+            }
+        }
+
+        $students = $query->latest()
             ->paginate(10)
             ->through(function ($student) {
                 return [
@@ -47,10 +196,15 @@ class StudentController extends Controller
                 ];
             });
 
+        // Get all courses for the filter dropdown
+        $courses = Course::select('id', 'name')->get();
+
         return Inertia::render('Admin/Students/Index', [
             'students' => array_merge($students->toArray(), [
                 'data' => $students->items(),
             ]),
+            'courses' => $courses,
+            'filters' => $request->filter ?? [],
         ]);
     }
 
@@ -87,10 +241,16 @@ class StudentController extends Controller
         $monthYear = date('mY');
         // Generate certificate number if not provided
         if (empty($validated['certificate_number'])) {
-            $validated['certificate_number'] = $latest
-                ?  ((int) $latest->certificate_number + 1)
-                :1;
-          //  $validated['certificate_number'] = date('dmY')+((int)($latest->certificate_number)+1);
+            if ($latest) {
+                // DSP bilan boshlanadigan raqamni ajratib olish
+                $lastNumber = (int) str_replace('DSP', '', $latest->certificate_number);
+
+                // Bittaga oshirib yangi raqam yaratish
+                $validated['certificate_number'] = 'DSP' . ($lastNumber + 1);
+            } else {
+                // Birinchi sertifikat bo‘lsa
+                $validated['certificate_number'] = 'DSP1';
+            }
         }
 
         $certificateData = [
@@ -204,11 +364,24 @@ class StudentController extends Controller
         // Generate certificate number if not provided
 
         if (empty($validated['certificate_number'])) {
-            $validated['certificate_number'] = $latest
-                ?  ((int) $latest->certificate_number + 1)
-                :  1;
-            //  $validated['certificate_number'] = date('dmY')+((int)($latest->certificate_number)+1);
+            if ($latest) {
+                // DSP bilan boshlanadigan raqamni ajratib olish
+                $lastNumber = (int) str_replace('DSP', '', $latest->certificate_number);
+
+                // Bittaga oshirib yangi raqam yaratish
+                $validated['certificate_number'] = 'DSP' . ($lastNumber + 1);
+            } else {
+                // Birinchi sertifikat bo‘lsa
+                $validated['certificate_number'] = 'DSP1';
+            }
         }
+
+//        if (empty($validated['certificate_number'])) {
+//            $validated['certificate_number'] = $latest
+//                ? 'DSP'+((int) $latest->certificate_number + 1)
+//                :  1;
+//            //  $validated['certificate_number'] = date('dmY')+((int)($latest->certificate_number)+1);
+//        }
         // Delete old QR code if exists
         if ($student->qr_code) {
             Storage::disk('public')->delete($student->qr_code);
@@ -233,7 +406,7 @@ class StudentController extends Controller
         );
 
         $result = $builder->build();
-        $qrCodePath = 'qrcodes/' . uniqid('qr_', true) . '.png';
+        $qrCodePath = 'qrcodes/' . $validated['certificate_number'] . '.png';
         $result->saveToFile(storage_path('app/public/' . $qrCodePath));
         $validated['qr_code'] = $qrCodePath;
 

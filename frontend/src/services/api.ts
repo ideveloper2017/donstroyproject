@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance with base URL and common headers
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8000/api',
+  baseURL: 'https://admin.donstroyproject.brainsmart.uz/api',
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -12,10 +12,10 @@ const api = axios.create({
 // Add request interceptor for adding auth token if available
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    // const token = localStorage.getItem('token');
+    // if (token) {
+    //   config.headers.Authorization = `Bearer ${token}`;
+    // }
     return config;
   },
   (error) => {
@@ -41,12 +41,12 @@ export const certificateService = {
   // Get all certificates with optional filters
   getAll: async (filters: { search?: string; category?: string } = {}) => {
     const params = new URLSearchParams();
-    
+
     if (filters.search) params.append('search', filters.search);
     if (filters.category && filters.category !== 'all') {
       params.append('category', filters.category);
     }
-    
+
     const response = await api.get(`/certificates?${params.toString()}`);
     return response.data;
   },

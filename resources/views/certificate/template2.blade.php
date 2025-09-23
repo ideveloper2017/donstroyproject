@@ -19,7 +19,7 @@
             height:794px;   /* A4 landscape */
             margin: 0 auto;
             overflow: hidden;
-            background: url("{{ public_path('certificate.png') }}") no-repeat center center;
+            background: url("{{ asset('certificate.png') }}") no-repeat center center;
             background-size: 100% 100%;
             border: 2px solid #b8860b;
             border-radius: 10px;
@@ -148,7 +148,7 @@
         $directorTitle = 'MCHJ direktori';
 
         // QR code path - FAYL YO‘LI bilan
-        $qrCodePath = public_path('storage/' . ($student->qr_code ?? 'qrcodes/sample.png'));
+        $qrCodePath = asset('storage/' . ($student->qr_code ?? 'qrcodes/sample.png'));
 //        $qrBase64 = '';
 //        if (file_exists($qrPath)) {
 //            $qrBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($qrPath));

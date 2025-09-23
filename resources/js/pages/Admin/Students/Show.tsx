@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 import { Link, router } from '@inertiajs/react';
 import { ArrowLeft, Download, Edit, Printer, QrCode } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface Student {
   id: number;
@@ -154,7 +155,6 @@ export default function ShowStudent({ student }: Props) {
                   variant="outline"
                   className="mt-4 w-full"
                   onClick={handleDownloadQR}
-                  disabled={!student.qr_code}
                 >
                   <Download className="mr-2 h-4 w-4" />
                   Download QR Code

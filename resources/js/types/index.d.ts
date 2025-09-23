@@ -30,6 +30,13 @@ export interface SharedData {
     [key: string]: unknown;
 }
 
+export interface PageProps {
+    auth: {
+        user: User;
+    };
+    [key: string]: unknown; // This allows for additional properties
+}
+
 export interface User {
     id: number;
     name: string;
@@ -41,3 +48,4 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+

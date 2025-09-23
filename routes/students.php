@@ -15,6 +15,7 @@ Route::middleware(['auth:sanctum', 'verified', AdminMiddleware::class])
         Route::get('/{student}/edit', [StudentController::class, 'edit'])->name('edit');
         Route::put('/{student}', [StudentController::class, 'update'])->name('update');
         Route::delete('/{student}', [StudentController::class, 'destroy'])->name('destroy');
+        Route::get('/export', [StudentController::class, 'export'])->name('export');
     });
 
 // Public certificate route (outside auth middleware for public access)

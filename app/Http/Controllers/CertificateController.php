@@ -14,7 +14,7 @@ class CertificateController extends Controller
             ->with('course')
             ->firstOrFail();
 
-        return view('certificate.template', compact('student'));
+        return view('certificate.template2', compact('student'));
     }
 
     public function download($certificateNumber)
@@ -24,7 +24,7 @@ class CertificateController extends Controller
             ->firstOrFail();
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('certificate.template', compact('student'));
-        
+
         return $pdf->download("certificate-{$certificateNumber}.pdf");
     }
 }

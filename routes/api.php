@@ -24,14 +24,14 @@ Route::post('/login', [\App\Http\Controllers\Auth\AuthenticatedSessionController
 Route::prefix('certificates')->group(function () {
     Route::get('/', [CertificateController::class, 'index']);
     Route::get('/verify/{certificateNumber}', [CertificateController::class, 'verify']);
-    
+
     // Protected routes (require authentication)
-    Route::middleware(['auth:sanctum'])->group(function () {
-        Route::post('/', [CertificateController::class, 'store']);
+//    Route::middleware(['auth:sanctum'])->group(function () {
+//        Route::post('/', [CertificateController::class, 'store']);
         Route::get('/{certificate}', [CertificateController::class, 'show']);
         Route::get('/{certificate}/download', [CertificateController::class, 'download']);
         Route::delete('/{certificate}', [CertificateController::class, 'destroy']);
-    });
+//    });
 });
 Route::post('/register', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'store']);
 
@@ -53,7 +53,7 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
 
     // User management
     Route::apiResource('users', \App\Http\Controllers\UserController::class);
-    
+
     // User role assignment
     Route::post('/users/{userId}/assign-role', [RolePermissionController::class, 'assignRoleToUser']);
 });

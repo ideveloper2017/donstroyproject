@@ -1,12 +1,14 @@
 import AdminLayout from '@/layouts/AdminLayout';
 import { Button } from '@/components/ui/button';
 import { Link, router, usePage } from '@inertiajs/react';
-import { Plus } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 import { DataTable } from '@/components/ui/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { PageProps } from '@/types';
+import { Input } from '@/components/ui/input';
+import { useState } from 'react';
 
 type Student = {
   id: number;
@@ -79,7 +81,7 @@ const columns: ColumnDef<Student>[] = [
 
 export default function StudentsIndex({ students }: Props) {
   const { auth } = usePage<PageProps>().props;
-
+  const [search,setSearch] = useState<string>('');
   return (
     <AdminLayout user={auth.user}>
       <div className="container mx-auto py-6 px-4">
@@ -94,6 +96,28 @@ export default function StudentsIndex({ students }: Props) {
         </div>
 
         <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="p-4 border-b">
+            <div className="relative max-w-md">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="Ism yoki sertifikat raqami bo'yicha qidirish..."
+                className="pl-10"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  router.get(
+                    '/admin/students',
+                    { search: e.target.value },
+                    {
+                      preserveState: true,
+                      preserveScroll: true,
+                    }
+                  );
+                }}
+              />
+            </div>
+          </div>
           <DataTable
             columns={columns}
             data={students.data}
@@ -108,7 +132,12 @@ export default function StudentsIndex({ students }: Props) {
               prev_page_url: students.prev_page_url,
             }}
             onPaginationChange={(pagination) => {
-              router.visit(`/admin/students?page=${pagination.pageIndex + 1}`, {
+              const params = new URLSearchParams();
+              params.set('page', String(pagination.pageIndex + 1));
+              if (search) {
+                params.set('search', search);
+              }
+              router.visit(`/admin/students?${params.toString()}`, {
                 only: ['students'],
                 preserveState: true,
                 preserveScroll: true,
