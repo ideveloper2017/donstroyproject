@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Building, Wrench, PaintBucket, Zap, TreePine, Shield } from 'lucide-react';
 
 const Services = () => {
@@ -57,22 +57,22 @@ const Services = () => {
           {services.map((service, index) => {
             const IconComponent = service.icon;
             return (
-              <div 
+              <div
                 key={index}
                 className="group bg-white border border-gray-200 rounded-2xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 group-hover:bg-blue-800 rounded-xl mb-6 transition-colors">
                   <IconComponent className="w-8 h-8 text-blue-800 group-hover:text-white transition-colors" />
                 </div>
-                
+
                 <h3 className="text-xl font-bold text-gray-800 mb-4">
                   {service.title}
                 </h3>
-                
+
                 <p className="text-gray-600 mb-6 leading-relaxed">
                   {service.description}
                 </p>
-                
+
                 <ul className="space-y-2 mb-6">
                   {service.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-center space-x-2 text-gray-700">
@@ -81,7 +81,7 @@ const Services = () => {
                     </li>
                   ))}
                 </ul>
-                
+
                 <button className="w-full bg-gray-100 hover:bg-blue-800 text-gray-800 hover:text-white py-3 rounded-lg font-semibold transition-all">
                   Batafsil ma'lumot
                 </button>

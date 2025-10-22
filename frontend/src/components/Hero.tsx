@@ -3,67 +3,78 @@ import { ArrowRight, Award, Users, Building2 } from 'lucide-react';
 
 const Hero = () => {
   return (
-    <section id="home" className="pt-24 bg-gradient-to-r from-blue-900 to-blue-800 text-white">
-      <div className="container mx-auto px-4 py-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8">
-            <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-              Sizning <span className="text-orange-400">orzuyingizdagi</span> binoni quramiz
-            </h1>
-            <p className="text-xl text-blue-100 leading-relaxed">
-              15 yillik tajriba bilan zamonaviy qurilish texnologiyalaridan foydalanib, 
-              yuqori sifatli va ishonchli binolar quramiz.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-all transform hover:scale-105">
-                <span>Bepul konsultatsiya</span>
-                <ArrowRight className="w-5 h-5" />
-              </button>
-              <button className="border-2 border-white text-white hover:bg-white hover:text-blue-800 px-8 py-4 rounded-lg font-semibold transition-all">
-                Loyihalarni ko'rish
-              </button>
-            </div>
-          </div>
+      <section
+          id="home"
+          className="bg-gradient-to-r from-blue-900 to-blue-800 pt-24 text-white"
+      >
+          <div className="container mx-auto px-4 py-20">
+              <div className="grid items-center gap-12 lg:grid-cols-2">
+                  <div className="space-y-8">
+                      <h1 className="text-5xl leading-tight font-bold lg:text-6xl">
+                          Sizning{' '}
+                          <span className="text-orange-400">
+                              orzuyingizdagi
+                          </span> binoni qurish uchun bilim va tajriba kerak
+                      </h1>
+                      <p className="text-xl leading-relaxed text-blue-100">
+                          5 yillik tajriba va zamonaviy qurilish texnologiyalari
+                          asosida, biz o‘quvchilarga haqiqiy ustozlardan bilim
+                          olish va amaliyotda qo‘llash imkoniyatini yaratamiz.
+                      </p>
+                      <div className="flex flex-col gap-4 sm:flex-row">
+                          <button className="flex transform items-center justify-center space-x-2 rounded-lg bg-orange-600 px-8 py-4 font-semibold text-white transition-all hover:scale-105 hover:bg-orange-700">
+                              <span>Bepul konsultatsiya</span>
+                              <ArrowRight className="h-5 w-5" />
+                          </button>
+                          <button className="rounded-lg border-2 border-white px-8 py-4 font-semibold text-white transition-all hover:bg-white hover:text-blue-800">
+                              Loyihalarni ko'rish
+                          </button>
+                      </div>
+                  </div>
 
-          <div className="relative">
-            <img
-              src="https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-              alt="Construction site"
-              className="rounded-2xl shadow-2xl"
-            />
-            <div className="absolute -bottom-6 -left-6 bg-white text-blue-800 p-6 rounded-xl shadow-xl">
-              <div className="text-3xl font-bold text-orange-600">500+</div>
-              <div className="font-medium">Muvaffaqiyatli loyiha</div>
-            </div>
-          </div>
-        </div>
+                  <div className="relative">
+                      <img
+                          src="https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                          alt="Construction site"
+                          className="rounded-2xl shadow-2xl"
+                      />
+                      <div className="absolute -bottom-6 -left-6 rounded-xl bg-white p-6 text-blue-800 shadow-xl">
+                          <div className="text-3xl font-bold text-orange-600">
+                              50+
+                          </div>
+                          <div className="font-medium">
+                              Muvaffaqiyatli yakunlanga kurslar
+                          </div>
+                      </div>
+                  </div>
+              </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20 pt-12 border-t border-blue-700">
-          <div className="text-center">
-            <div className="flex justify-center mb-4">
-              <Award className="w-12 h-12 text-orange-400" />
-            </div>
-            <div className="text-3xl font-bold mb-2">15+</div>
-            <div className="text-blue-200">Yillik tajriba</div>
+              {/* Stats */}
+              <div className="mt-20 grid grid-cols-1 gap-8 border-t border-blue-700 pt-12 md:grid-cols-3">
+                  <div className="text-center">
+                      <div className="mb-4 flex justify-center">
+                          <Award className="h-12 w-12 text-orange-400" />
+                      </div>
+                      <div className="mb-2 text-3xl font-bold">5+</div>
+                      <div className="text-blue-200">Yillik tajriba</div>
+                  </div>
+                  <div className="text-center">
+                      <div className="mb-4 flex justify-center">
+                          <Users className="h-12 w-12 text-orange-400" />
+                      </div>
+                      <div className="mb-2 text-3xl font-bold">5+</div>
+                      <div className="text-blue-200">Professional jamoa</div>
+                  </div>
+                  <div className="text-center">
+                      <div className="mb-4 flex justify-center">
+                          <Building2 className="h-12 w-12 text-orange-400" />
+                      </div>
+                      <div className="mb-2 text-3xl font-bold">50+</div>
+                      <div className="text-blue-200">Tamomlagan kurslar</div>
+                  </div>
+              </div>
           </div>
-          <div className="text-center">
-            <div className="flex justify-center mb-4">
-              <Users className="w-12 h-12 text-orange-400" />
-            </div>
-            <div className="text-3xl font-bold mb-2">50+</div>
-            <div className="text-blue-200">Professional jamoa</div>
-          </div>
-          <div className="text-center">
-            <div className="flex justify-center mb-4">
-              <Building2 className="w-12 h-12 text-orange-400" />
-            </div>
-            <div className="text-3xl font-bold mb-2">500+</div>
-            <div className="text-blue-200">Qurilgan obyekt</div>
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
   );
 };
 
