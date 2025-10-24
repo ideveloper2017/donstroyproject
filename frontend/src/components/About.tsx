@@ -21,116 +21,120 @@ const About = () => {
                   </p>
               </div>
 
-              <div className="mb-20 grid items-center gap-16 lg:grid-cols-2">
-                  <div>
-                      <h3 className="mb-6 text-3xl font-bold text-gray-800">
-                          Kompaniyamiz tarixi
-                      </h3>
-                      <p className="mb-6 leading-relaxed text-gray-600">
-                          2009-yilda tashkil etilgan DonStroyProject kompaniyasi
-                          bugungi kunda O'zbekistondagi eng yirik qurilish
-                          kompaniyalaridan biri hisoblanadi. Biz 15 yil davomida
-                          minglab mijozlarimizning ishonchini qozonib keldik.
-                      </p>
-                      <p className="mb-8 leading-relaxed text-gray-600">
-                          Bizning asosiy maqsadimiz – har bir mijozga yuqori
-                          sifatli xizmat ko'rsatish va zamonaviy texnologiyalar
-                          yordamida ishonchli binolar qurish.
-                      </p>
+              {/*<div className="mb-20 grid items-center gap-16 lg:grid-cols-2">*/}
+              {/*    <div>*/}
+              {/*        <h3 className="mb-6 text-3xl font-bold text-gray-800">*/}
+              {/*            Kompaniyamiz tarixi*/}
+              {/*        </h3>*/}
+              {/*        <p className="mb-6 leading-relaxed text-gray-600">*/}
+              {/*            2009-yilda tashkil etilgan DonStroyProject kompaniyasi*/}
+              {/*            bugungi kunda O'zbekistondagi eng yirik qurilish*/}
+              {/*            kompaniyalaridan biri hisoblanadi. Biz 15 yil davomida*/}
+              {/*            minglab mijozlarimizning ishonchini qozonib keldik.*/}
+              {/*        </p>*/}
+              {/*        <p className="mb-8 leading-relaxed text-gray-600">*/}
+              {/*            Bizning asosiy maqsadimiz – har bir mijozga yuqori*/}
+              {/*            sifatli xizmat ko'rsatish va zamonaviy texnologiyalar*/}
+              {/*            yordamida ishonchli binolar qurish.*/}
+              {/*        </p>*/}
 
-                      <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2">
-                          {features.map((feature, index) => (
-                              <div
-                                  key={index}
-                                  className="flex items-center space-x-3"
-                              >
-                                  <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-600" />
-                                  <span className="text-gray-700">
-                                      {feature}
-                                  </span>
-                              </div>
-                          ))}
-                      </div>
+              {/*        <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2">*/}
+              {/*            {features.map((feature, index) => (*/}
+              {/*                <div*/}
+              {/*                    key={index}*/}
+              {/*                    className="flex items-center space-x-3"*/}
+              {/*                >*/}
+              {/*                    <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-600" />*/}
+              {/*                    <span className="text-gray-700">*/}
+              {/*                        {feature}*/}
+              {/*                    </span>*/}
+              {/*                </div>*/}
+              {/*            ))}*/}
+              {/*        </div>*/}
 
-                      <button className="rounded-lg bg-blue-800 px-8 py-3 font-semibold text-white transition-colors hover:bg-blue-900">
-                          Batafsil ma'lumot
-                      </button>
-                  </div>
+              {/*        <button className="rounded-lg bg-blue-800 px-8 py-3 font-semibold text-white transition-colors hover:bg-blue-900">*/}
+              {/*            Batafsil ma'lumot*/}
+              {/*        </button>*/}
+              {/*    </div>*/}
 
-                  <div className="space-y-8">
-                      <img
-                          src="https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=1"
-                          alt="Our team"
-                          className="w-full rounded-2xl shadow-lg"
-                      />
+              {/*    <div className="space-y-8">*/}
+              {/*        <img*/}
+              {/*            src="https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=1"*/}
+              {/*            alt="Our team"*/}
+              {/*            className="w-full rounded-2xl shadow-lg"*/}
+              {/*        />*/}
 
-                      <div className="grid grid-cols-3 gap-6 text-center">
-                          <div className="rounded-xl bg-white p-6 shadow-md">
-                              <div className="mb-2 text-2xl font-bold text-blue-800">
-                                  500+
-                              </div>
-                              <div className="text-sm text-gray-600">
-                                  Loyihalar
-                              </div>
-                          </div>
-                          <div className="rounded-xl bg-white p-6 shadow-md">
-                              <div className="mb-2 text-2xl font-bold text-blue-800">
-                                  15
-                              </div>
-                              <div className="text-sm text-gray-600">
-                                  Yil tajriba
-                              </div>
-                          </div>
-                          <div className="rounded-xl bg-white p-6 shadow-md">
-                              <div className="mb-2 text-2xl font-bold text-blue-800">
-                                  50+
-                              </div>
-                              <div className="text-sm text-gray-600">
-                                  Xodimlar
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
+              {/*        <div className="grid grid-cols-3 gap-6 text-center">*/}
+              {/*            <div className="rounded-xl bg-white p-6 shadow-md">*/}
+              {/*                <div className="mb-2 text-2xl font-bold text-blue-800">*/}
+              {/*                    500+*/}
+              {/*                </div>*/}
+              {/*                <div className="text-sm text-gray-600">*/}
+              {/*                    Loyihalar*/}
+              {/*                </div>*/}
+              {/*            </div>*/}
+              {/*            <div className="rounded-xl bg-white p-6 shadow-md">*/}
+              {/*                <div className="mb-2 text-2xl font-bold text-blue-800">*/}
+              {/*                    15*/}
+              {/*                </div>*/}
+              {/*                <div className="text-sm text-gray-600">*/}
+              {/*                    Yil tajriba*/}
+              {/*                </div>*/}
+              {/*            </div>*/}
+              {/*            <div className="rounded-xl bg-white p-6 shadow-md">*/}
+              {/*                <div className="mb-2 text-2xl font-bold text-blue-800">*/}
+              {/*                    50+*/}
+              {/*                </div>*/}
+              {/*                <div className="text-sm text-gray-600">*/}
+              {/*                    Xodimlar*/}
+              {/*                </div>*/}
+              {/*            </div>*/}
+              {/*        </div>*/}
+              {/*    </div>*/}
+              {/*</div>*/}
 
               {/* Values */}
               <div className="grid gap-8 md:grid-cols-3">
                   <div className="rounded-2xl bg-white p-8 text-center shadow-lg">
-                      <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
-                          <Target className="h-8 w-8 text-blue-800" />
-                      </div>
+                      {/*<div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">*/}
+                      {/*    <Target className="h-8 w-8 text-blue-800" />*/}
+                      {/*</div>*/}
                       <h4 className="mb-4 text-xl font-bold text-gray-800">
-                          Bizning maqsadimiz
+                          <img
+                              src="191180-b08f394e00787510f6ca478bb6a78828.png"
+                              alt="Our team"
+                              className="w-full rounded-2xl shadow-lg"
+                          />
                       </h4>
                       <p className="text-gray-600">
-                          Har bir loyihani eng yuqori sifat standartlariga
-                          muvofiq amalga oshirish
+                          Kadrlar malakasini oshirish va ularni qayta tayyorlash
+                          faoliyati
                       </p>
                   </div>
 
                   <div className="rounded-2xl bg-white p-8 text-center shadow-lg">
-                      <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-orange-100">
-                          <Eye className="h-8 w-8 text-orange-600" />
-                      </div>
                       <h4 className="mb-4 text-xl font-bold text-gray-800">
-                          Bizning ko'rish
+                          <img
+                              src="716958-80a1eb871f84b0a59e0b1279733cc925-1.png"
+                              alt="Our team"
+                              className="w-full rounded-2xl shadow-lg"
+                          />
                       </h4>
                       <p className="text-gray-600">
-                          O'zbekistonda eng ishonchli va innovatsion qurilish
-                          kompaniyasi bo'lish
+                          Maatba faoliyati
                       </p>
                   </div>
 
                   <div className="rounded-2xl bg-white p-8 text-center shadow-lg">
-                      <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-                          <Heart className="h-8 w-8 text-green-600" />
-                      </div>
                       <h4 className="mb-4 text-xl font-bold text-gray-800">
-                          Bizning qadriyatlarimiz
+                          <img
+                              src="1014265-c63b904713c5cdb45a9e248367bca505-1.png"
+                              alt="Our team"
+                              className="w-full rounded-2xl shadow-lg"
+                          />
                       </h4>
                       <p className="text-gray-600">
-                          Halollik, sifat, mijozlarga hurmat va professional
-                          yondashuv
+                          Noshirlik faoliyati
                       </p>
                   </div>
               </div>

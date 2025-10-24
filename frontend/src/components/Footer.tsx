@@ -12,8 +12,8 @@ const Footer = () => {
               DonStroy<span className="text-orange-600">Project</span>
             </div>
             <p className="text-gray-300 mb-6 leading-relaxed">
-              O'zbekistonda qurilish sohasida 15 yillik tajribaga ega bo'lgan kompaniyamiz 
-              eng yuqori sifatli xizmatlarni taqdim etadi. Bizning maqsadimiz - har bir 
+              O'zbekistonda qurilish sohasida o'qitish bo'yicha 5 yillik tajribaga ega bo'lgan kompaniyamiz
+              eng yuqori sifatli xizmatlarni taqdim etadi. Bizning maqsadimiz - har bir
               mijozning orzularini ro'yobga chiqarish.
             </p>
             <div className="flex space-x-4">
@@ -51,7 +51,7 @@ const Footer = () => {
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-orange-600" />
-                <span className="text-gray-300">+998 90 123 45 67</span>
+                <span className="text-gray-300">+998 93 938 22 23</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-orange-600" />
@@ -60,8 +60,9 @@ const Footer = () => {
               <div className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-orange-600 mt-1" />
                 <span className="text-gray-300">
-                  Toshkent shahar, Yunusobod tumani<br />
-                  Amir Temur ko'chasi, 108-uy
+                  Namangan viloyat, Namangan shahar,<br/>
+                    Mustaqillik MFY, Mustaqillik ko'chasi, 6-a uy<br />
+
                 </span>
               </div>
             </div>

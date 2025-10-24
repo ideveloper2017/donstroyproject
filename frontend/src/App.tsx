@@ -13,7 +13,7 @@ function App() {
     <div className="min-h-screen">
       <Header />
       <Hero />
-      {/*<About />*/}
+      <About />
       <Services />
       {/*<Projects />*/}
       <Certificates />
