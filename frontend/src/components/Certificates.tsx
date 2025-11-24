@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Award, Calendar, User, Download, Search, Filter, Eye, X, CheckCircle, Loader2 } from 'lucide-react';
 import { certificateService } from '../services/api';
+import { id } from 'zod/locales';
+
+interface Category {
+  id: number;
+  name: string;
+}
 
 interface Certificate {
     id: number;
@@ -20,12 +26,56 @@ interface Course {
 
 const Certificates = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('0');
   const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  // Pagination state
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    perPage: 9,
+    total: 0,
+    lastPage: 1,
+    from: 0,
+    to: 0
+  });
+
+  // Fetch categories when component mounts
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await certificateService.getCategories();
+
+        // Ensure we have an array and it's not empty
+        const data = Array.isArray(response) ? response : [];
+        const allCategories = [
+          { id: 0, name: 'Barcha kurslar' },
+          ...data.map((cat: Category) => {
+            const category:Category = {
+              id: cat.id || 0,
+              name: cat.name,
+            };
+            return category;
+          })
+        ];
+
+        console.log('All categories to be set:', allCategories);
+        setCategories(allCategories);
+      } catch (err) {
+        console.error('Error fetching categories:', err);
+        setError('Kurslarni yuklashda xatolik yuz berdi. Iltimos, qayta yuklang.');
+      } finally {
+        setIsLoadingCategories(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   // Fetch certificates when component mounts or filters change
   useEffect(() => {
@@ -33,11 +83,51 @@ const Certificates = () => {
       try {
         setIsLoading(true);
         setError(null);
-        const data = await certificateService.getAll({
+        const response = await certificateService.getAll({
           search: searchTerm,
-          category: selectedCategory,
+          category: selectedCategory !== '0' ? selectedCategory : undefined,
+          page: pagination.currentPage,
+          per_page: pagination.perPage
         });
-        setCertificates(data?.data);
+
+        console.log('API Response:', response); // Debug log
+
+        // Check if response has data and meta properties
+        if (response && response.data) {
+          setCertificates(response.data);
+
+          // Update pagination info from response
+          if (response.meta) {
+            console.log('Pagination meta:', response.meta); // Debug log
+            setPagination(prev => ({
+              ...prev,
+              total: response.meta.total || 0,
+              lastPage: response.meta.last_page || 1,
+              from: response.meta.from || 0,
+              to: response.meta.to || 0
+            }));
+          } else {
+            console.log('No meta data in response, using default pagination');
+            // Set default values if meta is not available
+            setPagination(prev => ({
+              ...prev,
+              total: response.data.length,
+              lastPage: 1,
+              from: 1,
+              to: response.data.length
+            }));
+          }
+        } else {
+          console.error('Invalid response format:', response);
+          setCertificates([]);
+          setPagination(prev => ({
+            ...prev,
+            total: 0,
+            lastPage: 1,
+            from: 0,
+            to: 0
+          }));
+        }
       } catch (err) {
         console.error('Error fetching certificates:', err);
         setError('Sertifikatlarni yuklashda xatolik yuz berdi. Iltimos, keyinroq urinib ko\'ring.');
@@ -48,11 +138,79 @@ const Certificates = () => {
 
     // Add debounce to prevent too many API calls while typing
     const timer = setTimeout(() => {
+      // Always fetch certificates when any dependency changes
       fetchCertificates();
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [searchTerm, selectedCategory]);
+  }, [searchTerm, selectedCategory, pagination.currentPage, pagination.perPage]);
+
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    // Save current scroll position
+    const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+    
+    setPagination(prev => ({
+      ...prev,
+      currentPage: page
+    }));
+    
+    // Restore scroll position after state update
+    setTimeout(() => {
+      window.scrollTo(0, scrollPosition);
+    }, 0);
+  };
+
+  // Handle items per page change
+  const handlePerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setPagination(prev => ({
+      ...prev,
+      perPage: parseInt(e.target.value),
+      currentPage: 1 // Reset to first page when changing items per page
+    }));
+  };
+
+  // Generate page numbers for pagination
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxPagesToShow = 5; // Maximum number of page buttons to show
+
+    if (pagination.lastPage <= maxPagesToShow) {
+      // If total pages is less than max pages to show, show all pages
+      for (let i = 1; i <= pagination.lastPage; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Show first page, current page with neighbors, and last page
+      const startPage = Math.max(2, pagination.currentPage - 1);
+      const endPage = Math.min(pagination.lastPage - 1, pagination.currentPage + 1);
+
+      // Always show first page
+      pages.push(1);
+
+      // Add ellipsis if needed
+      if (startPage > 2) {
+        pages.push(-1); // -1 represents ellipsis
+      }
+
+      // Add current page and its neighbors
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+
+      // Add ellipsis if needed
+      if (endPage < pagination.lastPage - 1) {
+        pages.push(-1); // -1 represents ellipsis
+      }
+
+      // Always show last page
+      if (pagination.lastPage > 1) {
+        pages.push(pagination.lastPage);
+      }
+    }
+
+    return pages;
+  };
 
   const handleDownload = async (id: string) => {
     try {
@@ -70,7 +228,7 @@ const Certificates = () => {
       alert('Sertifikatni yuklab olishda xatolik yuz berdi. Iltimos, keyinroq urinib ko\'ring.');
     }
   };
-  // Loading and error states are handled at the beginning of the render
+  // Loading state
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[50vh]">
@@ -79,6 +237,7 @@ const Certificates = () => {
     );
   }
 
+  // Error state
   if (error) {
     return (
       <div className="text-center py-12">
@@ -93,21 +252,71 @@ const Certificates = () => {
     );
   }
 
+  // No results state
+  if (certificates.length === 0) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Search and filter section */}
+        <div className="mb-8 flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              placeholder="Sertifikat qidirish..."
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          {isLoadingCategories ? (
+            <div className="block w-full sm:w-64 pl-3 pr-10 py-2 text-base border border-gray-300 rounded-md bg-gray-100 animate-pulse">
+              Yuklanmoqda...
+            </div>
+          ) : (
 
-  const categories = [
-    { value: 'all', label: 'Barcha kurslar' },
-    { value: 'management', label: 'Menejment' },
-    { value: 'design', label: 'Dizayn' },
-    { value: 'construction', label: 'Qurilish' },
-    { value: 'electrical', label: 'Elektr' },
-    { value: 'plumbing', label: 'Santexnika' }
-  ];
+            <select
+              id="category"
+              name="category"
+              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
 
+              {categories.map((category:Category) => (
 
+                <option  value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
 
+        {/* No results message */}
+        <div className="text-center py-16 bg-white rounded-lg shadow-sm">
+          <div className="flex flex-col items-center">
+            <Award className="h-16 w-16 text-gray-300 mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Hozircha hech qanday sertifikat topilmadi</h3>
+            <p className="text-gray-500 mb-6">Iltimos, boshqa filtrlarda qayta urinib ko'ring</p>
+            <button
+              onClick={() => {
+                setSearchTerm('');
+                setSelectedCategory('all');
+              }}
+              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm font-medium"
+            >
+              Filtrlarni tozalash
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
   const filteredCertificates = certificates;
 
-    console.log(filteredCertificates);
+  //  console.log(filteredCertificates);
   // Format date for display
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -198,25 +407,43 @@ const Certificates = () => {
                               onChange={handleCategoryChange}
                               className="min-w-[200px] appearance-none rounded-lg border border-gray-300 bg-white py-3 pr-8 pl-10 focus:border-transparent focus:ring-2 focus:ring-blue-500"
                           >
-                              {categories.map((category) => (
+                              {categories.map((category:Category) => (
                                   <option
-                                      key={category.value}
-                                      value={category.value}
+                                      key={category.id}
+                                      value={category.id}
                                   >
-                                      {category.label}
+                                      {category.name}
                                   </option>
                               ))}
                           </select>
                       </div>
                   </div>
 
-                  <div className="mb-8">
-                      <p className="text-gray-600">
+                  <div className="mb-8 flex flex-col sm:flex-row justify-between items-center">
+                      <p className="text-gray-600 mb-4 sm:mb-0">
                           <span className="font-semibold">
-                              {filteredCertificates.length}
+                              {pagination.total}
                           </span>{' '}
-                          ta natija topildi
+                          ta natijadan <span className="font-semibold">
+                              {pagination.from}-{pagination.to}
+                          </span> ko'rsatilmoqda
                       </p>
+
+                      {/* Items per page selector */}
+                      <div className="flex items-center">
+                          <label htmlFor="perPage" className="mr-2 text-sm text-gray-600">Ko'rsatish:</label>
+                          <select
+                              id="perPage"
+                              value={pagination.perPage}
+                              onChange={handlePerPageChange}
+                              className="rounded-md border border-gray-300 py-1 pl-2 pr-8 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          >
+                              <option value="9">9</option>
+                              <option value="15">15</option>
+                              <option value="30">30</option>
+                              <option value="60">60</option>
+                          </select>
+                      </div>
                   </div>
 
                   <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -326,6 +553,69 @@ const Certificates = () => {
                           <p className="text-gray-500">
                               Qidiruv shartlarini o'zgartirib ko'ring
                           </p>
+                      </div>
+                  )}
+
+                  {/* Pagination */}
+                  {pagination.lastPage > 1 && (
+                      <div className="mt-8 flex flex-col items-center justify-between space-y-4 sm:flex-row sm:space-y-0">
+                          <div className="text-sm text-gray-600">
+                              Sahifa {pagination.currentPage} / {pagination.lastPage}
+                          </div>
+
+                          <div className="flex space-x-1">
+                              {/* First Page */}
+                              <button
+                                  onClick={() => handlePageChange(1)}
+                                  disabled={pagination.currentPage === 1}
+                                  className={`rounded-md px-3 py-1 ${pagination.currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'}`}
+                              >
+                                  &laquo;
+                              </button>
+
+                              {/* Previous Page */}
+                              <button
+                                  onClick={() => handlePageChange(pagination.currentPage - 1)}
+                                  disabled={pagination.currentPage === 1}
+                                  className={`rounded-md px-3 py-1 ${pagination.currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'}`}
+                              >
+                                  &lsaquo;
+                              </button>
+
+                              {/* Page Numbers */}
+                              {getPageNumbers().map((page, index) => (
+                                  <button
+                                      key={index}
+                                      onClick={() => page > 0 && handlePageChange(page)}
+                                      className={`rounded-md px-3 py-1 ${page === pagination.currentPage
+                                          ? 'bg-blue-600 text-white'
+                                          : page === -1
+                                              ? 'cursor-default'
+                                              : 'text-gray-700 hover:bg-gray-100'}`}
+                                      disabled={page === -1}
+                                  >
+                                      {page === -1 ? '...' : page}
+                                  </button>
+                              ))}
+
+                              {/* Next Page */}
+                              <button
+                                  onClick={() => handlePageChange(pagination.currentPage + 1)}
+                                  disabled={pagination.currentPage === pagination.lastPage}
+                                  className={`rounded-md px-3 py-1 ${pagination.currentPage === pagination.lastPage ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'}`}
+                              >
+                                  &rsaquo;
+                              </button>
+
+                              {/* Last Page */}
+                              <button
+                                  onClick={() => handlePageChange(pagination.lastPage)}
+                                  disabled={pagination.currentPage === pagination.lastPage}
+                                  className={`rounded-md px-3 py-1 ${pagination.currentPage === pagination.lastPage ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'}`}
+                              >
+                                  &raquo;
+                              </button>
+                          </div>
                       </div>
                   )}
 

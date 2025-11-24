@@ -27,9 +27,10 @@ class CertificateController extends Controller
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('certificate_number', 'like', "%{$search}%")
-                  ->orWhereHas('student', function($q) use ($search) {
-                      $q->where('name', 'like', "%{$search}%");
-                  })
+                    ->orWhere('name', 'like', "%{$search}%")
+//                  ->orWhereHas('student', function($q) use ($search) {
+//                      $q->where('name', 'like', "%{$search}%");
+//                  })
                   ->orWhereHas('course', function($q) use ($search) {
                       $q->where('name', 'like', "%{$search}%");
                   });
@@ -37,15 +38,26 @@ class CertificateController extends Controller
         }
 
         // Category filter
-        if ($request->has('category') && $request->category !== 'all') {
+        if ($request->has('category') && $request->category !== '0') {
             $query->whereHas('course', function($q) use ($request) {
-                $q->where('category', $request->category);
+                $q->where('id', $request->category);
             });
         }
 
-        $certificates = $query->latest()->paginate(100);
+        $perPage = $request->input('per_page', 10); // Default to 10 items per page
+        $certificates = $query->with(['course'])->paginate($perPage);
 
-        return response()->json($certificates);
+        return response()->json([
+            'data' => $certificates->items(),
+            'meta' => [
+                'current_page' => $certificates->currentPage(),
+                'last_page' => $certificates->lastPage(),
+                'per_page' => $certificates->perPage(),
+                'total' => $certificates->total(),
+                'from' => $certificates->firstItem(),
+                'to' => $certificates->lastItem(),
+            ]
+        ]);
     }
 
     /**

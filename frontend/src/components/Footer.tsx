@@ -33,17 +33,17 @@ const Footer = () => {
           </div>
 
           {/* Services */}
-          <div>
-            <h4 className="text-lg font-semibold mb-6">Xizmatlarimiz</h4>
-            <ul className="space-y-3">
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Qurilish ishlari</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Ta'mirlash ishlari</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Ichki bezatish</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Elektr ishlari</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Landshaft dizayni</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Kafolat xizmati</a></li>
-            </ul>
-          </div>
+          {/*<div>*/}
+          {/*  <h4 className="text-lg font-semibold mb-6">Xizmatlarimiz</h4>*/}
+          {/*  <ul className="space-y-3">*/}
+          {/*    <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Qurilish ishlari</a></li>*/}
+          {/*    <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Ta'mirlash ishlari</a></li>*/}
+          {/*    <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Ichki bezatish</a></li>*/}
+          {/*    <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Elektr ishlari</a></li>*/}
+          {/*    <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Landshaft dizayni</a></li>*/}
+          {/*    <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Kafolat xizmati</a></li>*/}
+          {/*  </ul>*/}
+          {/*</div>*/}
 
           {/* Contact Info */}
           <div>

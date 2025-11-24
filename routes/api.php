@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CertificateController;
+use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\RolePermissionController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,9 @@ use Illuminate\Support\Facades\Route;
 // User authentication routes (public)
 Route::post('/login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'store']);
 
+Route::prefix('courses')->group(function () {
+    Route::get('/', [CourseController::class, 'index']);
+});
 // Certificate routes (public)
 Route::prefix('certificates')->group(function () {
     Route::get('/', [CertificateController::class, 'index']);
