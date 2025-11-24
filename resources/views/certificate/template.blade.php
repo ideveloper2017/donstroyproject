@@ -15,8 +15,8 @@
 
         .certificate {
             position: absolute;
-            width: 1123px;   /* A4 landscape */
-            height:794px;   /* A4 landscape */
+            width: 1123px; /* A4 landscape */
+            height: 794px; /* A4 landscape */
             margin: 0 auto;
             overflow: hidden;
             background: url("{{ public_path('certificate.png') }}") no-repeat center center;
@@ -32,7 +32,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover; /* rasmni cho‘zib bo‘lmaydi */
-            z-index: -1;       /* yozuvlar ustida turadi */
+            z-index: -1; /* yozuvlar ustida turadi */
         }
 
         .field {
@@ -40,9 +40,10 @@
             text-align: center;
             color: #111;
         }
+
         .uzbekistan {
             top: 130px;
-            left:500px;
+            left: 500px;
             width: 40%;
             font-size: 26px;
         }
@@ -101,9 +102,9 @@
 
         .qr-code {
             position: absolute;
-            bottom: 50px;          /* yuqoridan masofa */
-            right: 50px;        /* o‘ngdan masofa */
-            width: 120px;       /* element eni (markazlash uchun) */
+            bottom: 50px; /* yuqoridan masofa */
+            right: 50px; /* o‘ngdan masofa */
+            width: 120px; /* element eni (markazlash uchun) */
             text-align: center; /* img va p markazda turadi */
         }
 
@@ -169,8 +170,11 @@
     <div class="field course-text">
         "{{ $companyName }} MCHJ" ning kadrlar malakasini oshirish bo'limida <br>
         <strong>{{ $courseName }}</strong> <br>
-        bo'yicha {{ $hours }} soatlik sohaviy mavzularni o'qidi, yakuniy baholashni ijobiy topshirganligi uchun<br/>
-        "<strong>{{ $controlType }}</strong>" bo'yicha sertifikat berildi.
+        bo'yicha {{ $hours }} soatlik sohaviy mavzularni o'qidi, yakuniy baholashni ijobiy topshirganligi uchun<br />
+        {!! $controlType
+? '<strong>' . $controlType . '</strong> bo‘yicha sertifikat berildi.'
+: 'sertifikat berildi.'
+!!}
     </div>
 
     @if (!empty($level))
@@ -191,12 +195,12 @@
     </div>
 
     <!-- QR Code -->
-{{--    @if($qrBase64)--}}
-        <div class="qr-code">
-            <img src="{{ $qrCodePath }}" alt="QR Code">
-            <p>QR kod orqali tekshiring</p>
-        </div>
-{{--    @endif--}}
+    {{--    @if($qrBase64)--}}
+    <div class="qr-code">
+        <img src="{{ $qrCodePath }}" alt="QR Code">
+        <p>QR kod orqali tekshiring</p>
+    </div>
+    {{--    @endif--}}
 </div>
 </body>
 </html>

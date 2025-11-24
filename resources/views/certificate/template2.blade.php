@@ -170,7 +170,10 @@
         "{{ $companyName }} MCHJ" ning kadrlar malakasini oshirish bo'limida <br>
         <strong>{{ $courseName }}</strong> <br>
         bo'yicha {{ $hours }} soatlik sohaviy mavzularni o'qidi, yakuniy baholashni ijobiy topshirganligi uchun<br/>
-        "<strong>{{ $controlType }}</strong>" bo'yicha sertifikat berildi.
+        {!! $controlType
+? '<strong>' . $controlType . '</strong> bo‘yicha sertifikat berildi.'
+: 'sertifikat berildi.'
+!!}
     </div>
 
     @if (!empty($level))
