@@ -7,7 +7,9 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
-
+Route::get('/certificates', function () {
+    return view('certificates');
+})->name('certificates');
 // Certificate Routes
 Route::get('/certificate/{certificateNumber}', [CertificateController::class, 'show'])
     ->name('certificate.show');

@@ -21,6 +21,24 @@
 
         {{-- Inline style to set the HTML background color based on our theme in app.css --}}
         <style>
+            /* Add these styles to your main CSS file */
+            #coursesList [data-course] {
+                transition: all 0.2s ease;
+            }
+
+            #coursesList [data-course].active {
+                background-color: #ebf5ff;
+                border-left: 3px solid #3b82f6;
+            }
+
+            #pagination button {
+                min-width: 40px;
+                margin: 0 2px;
+            }
+
+            #pagination button:disabled {
+                cursor: not-allowed;
+            }
             html {
                 background-color: oklch(1 0 0);
             }

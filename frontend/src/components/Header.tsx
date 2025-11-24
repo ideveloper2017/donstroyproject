@@ -36,7 +36,7 @@ const Header = () => {
                   {/* Desktop Navigation */}
                   <nav className="hidden space-x-8 md:flex">
                       <a
-                          href="#home"
+                          href="/"
                           className="font-medium text-gray-700 transition-colors hover:text-blue-800"
                       >
                           Bosh sahifa
@@ -53,14 +53,14 @@ const Header = () => {
                       >
                           Xizmatlar
                       </a>
+                      {/*<a*/}
+                      {/*    href="#projects"*/}
+                      {/*    className="font-medium text-gray-700 transition-colors hover:text-blue-800"*/}
+                      {/*>*/}
+                      {/*    Loyihalar*/}
+                      {/*</a>*/}
                       <a
-                          href="#projects"
-                          className="font-medium text-gray-700 transition-colors hover:text-blue-800"
-                      >
-                          Loyihalar
-                      </a>
-                      <a
-                          href="#certificates"
+                          href="/certificates"
                           className="font-medium text-gray-700 transition-colors hover:text-blue-800"
                       >
                           Sertifikatlar
