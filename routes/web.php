@@ -4,6 +4,9 @@ use App\Http\Controllers\CertificateController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+Route::get('/gen', function(){
+    return Hash::make('2025_01!Everest.tuit.uz_T15!@');
+});
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');

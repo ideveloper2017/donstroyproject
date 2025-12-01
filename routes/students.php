@@ -13,6 +13,7 @@ Route::middleware(['auth:sanctum', 'verified', AdminMiddleware::class])
         Route::post('/', [StudentController::class, 'store'])->name('store');
         Route::get('/{student}', [StudentController::class, 'show'])->name('show');
         Route::get('/{student}/edit', [StudentController::class, 'edit'])->name('edit');
+        Route::delete('/{student}', [StudentController::class, 'destroy'])->name('destroy');
         Route::put('/{student}', [StudentController::class, 'update'])->name('update');
         Route::delete('/{student}', [StudentController::class, 'destroy'])->name('destroy');
         Route::get('/export', [StudentController::class, 'export'])->name('export');

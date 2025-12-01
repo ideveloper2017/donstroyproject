@@ -1,7 +1,7 @@
 import AdminLayout from '@/layouts/AdminLayout';
 import { Button } from '@/components/ui/button';
 import { Link, router, usePage } from '@inertiajs/react';
-import { Plus, Search } from 'lucide-react';
+import { DeleteIcon, Edit2Icon, EyeIcon, Plus, Search } from 'lucide-react';
 import { DataTable } from '@/components/ui/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
@@ -37,46 +37,74 @@ type Props = {
 };
 
 const columns: ColumnDef<Student>[] = [
-  {
-    accessorKey: 'certificate_number',
-    header: 'Sertifikat raqami',
-  },
-  {
-    accessorKey: 'name',
-    header: 'Tinlovchi ismi',
-  },
-  {
-    accessorKey: 'course.name',
-    header: 'Kurs',
-  },
-  {
-    accessorKey: 'certificate_date',
-    header: 'Berilgan sana',
-    cell: ({ row }) => (
-      <div>{row.original.certificate_date ? format(new Date(row.original.certificate_date), 'PP') : '-'}</div>
-    ),
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => (
-      <div className="flex space-x-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => router.visit(`/admin/students/${row.original.id}`)}
-        >
-          Ko'rish
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => router.visit(`/admin/students/${row.original.id}/edit`)}
-        >
-          Tahrirlash
-        </Button>
-      </div>
-    ),
-  },
+    {
+        accessorKey: 'certificate_number',
+        header: 'Sertifikat raqami',
+    },
+    {
+        accessorKey: 'name',
+        header: 'Tinlovchi ismi',
+    },
+    {
+        accessorKey: 'course.name',
+        header: 'Kurs',
+    },
+    {
+        accessorKey: 'certificate_date',
+        header: 'Berilgan sana',
+        cell: ({ row }) => (
+            <div>
+                {row.original.certificate_date
+                    ? format(new Date(row.original.certificate_date), 'PP')
+                    : '-'}
+            </div>
+        ),
+    },
+    {
+        id: 'actions',
+        cell: ({ row }) => (
+            <div className="flex space-x-2">
+                <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        if (confirm('Haqiqatdan ham ushbu talabani o\'chirmoqchimisiz?')) {
+                            router.delete(`/admin/students/${row.original.id}`, {
+                                onSuccess: () => {
+                                    // Refresh the page after successful deletion
+                                    router.reload();
+                                },
+                                onError: (errors) => {
+                                    console.error('Error deleting student:', errors);
+                                }
+                            });
+                        }
+                    }}
+                >
+                    <DeleteIcon/>
+                </Button>
+                <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() =>
+                        router.visit(`/admin/students/${row.original.id}`)
+                    }
+                >
+                    <EyeIcon/>
+                </Button>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                        router.visit(`/admin/students/${row.original.id}/edit`)
+                    }
+                >
+                    <Edit2Icon/>
+                </Button>
+            </div>
+        ),
+    },
 ];
 
 export default function StudentsIndex({ students }: Props) {
